@@ -7,11 +7,11 @@
 
 /*
 Author: lkri-dev 
-Source: https://github.com/lkri-dev/ANSICMenu
+Source: https://github.com/lkri-dev/Memory-PointerExample.git
 
 Compiler notes
-gcc -o menu Menu.c -lncurses
-./menu
+gcc -o a PointerExample.c -lncurses -lm
+./a
 
 Helpfull links:
 	curses.h:
@@ -34,7 +34,7 @@ char *menuOptions[] = { //contains the menu options
 	"Pointer Example 1",
 	"Pointer Example 2",
 	"Pointer Example 3",
-	"Pointer Example 4",
+	"Bit shitft eksempel",
 	"Exit",
 };
 int const n_options = sizeof(menuOptions) / sizeof(char *); // contain size of menu options
@@ -54,17 +54,22 @@ void PrintMemoryDiagram (short size) {
  * PointerExample1 
  * The first pointer example
 */
-void Char () {
+void ArrayExample () {
 	short arraySize = 10;
-	char var2[arraySize];
-	const int var2Address = &var2;
-	const short var2Size = sizeof(var2);
+	char CharArray[arraySize];
+	const int var2Address = &CharArray;
+	const short var2Size = sizeof(CharArray);
 	
-	printf("Variable %s of type char[%d])\n\n", NAMEOF(var2), arraySize);
+	printf("Variable %s of type char[%d])\n\n", NAMEOF(CharArray), arraySize);
 	
-	printf("Size of of %s variable: %d bytes\n", NAMEOF(var2), var2Size );
+	printf("Size of of %s variable: %d bytes\n", NAMEOF(CharArray), var2Size );
 	
-	printf("Address of %s variable: \n0x%X\n", NAMEOF(var2), &var2 );
+	printf("Address of %s: \n0x%X\n", NAMEOF(CharArray), (int)&CharArray );
+	
+	for (int i = 0; i >= arraySize; i++) {
+		printf("0x%X\n", (int)&CharArray[i]);
+	
+	}
 	PrintMemoryDiagram(var2Size);
 	printf("0x%X\n", var2Address + var2Size);
 	printf("\n");
@@ -77,35 +82,81 @@ void Char () {
 */
 void PointerExample1 () {
 	long var1;
-	const int var1Address = &var1;
+	const int var1Address = (int)&var1;
 	const short var1Size = sizeof(var1);
 	const int numberOfBits = (var1Size * 8); //8 is the number of bits in a byte
 	const unsigned long long possibleValues = pow(2 ,numberOfBits); //2^n, 2 comes from the posible stage of a bit 1 and 0.
 	
-	printf("%d\n", numberOfBits);
-	printf("Variables have adresses in memory\n\n");
 	
-	printf("Variables %s(int))\n\n", NAMEOF(var1));
-	
+	printf("Variables have adresses in memory\n\n");	
 	
 	printf("Size of %s variable: %d bytes\n", NAMEOF(var1), var1Size );
-	printf("Number of possible values of %s is %ld\n", NAMEOF(var1), possibleValues);
-	printf("Address of %s variable: \n0x%X\n", NAMEOF(var1), &var1 );
+	//printf("Size in bits: %d\n", numberOfBits);
+	printf("Number of possible values of %s is %lld\n", NAMEOF(var1), possibleValues);
+	printf("Address of %s variable: \n0x%X\n", NAMEOF(var1), var1Address);
 	PrintMemoryDiagram(var1Size);
 	printf("0x%X\n", var1Address + var1Size);
 	printf("\n");
+	keypress(0);
+	ArrayExample();
 }
+
 /*
  * PointerExample2 
  * The second pointer example
  * What is pointers?
 */
 void PointerExample2 () {
-	printf("\n");
-	int    *ip;    /* pointer to an integer */
-	double *dp;    /* pointer to a double */
-	float  *fp;    /* pointer to a float */
-	char   *chp;     /* pointer to a character */
+	/* Pointer of integer type, this can hold the
+    * address of a integer type variable.
+    */
+   int *p;
+
+   int var = 10;
+
+   /* Assigning the address of variable var to the pointer
+    * p. The p can hold the address of var because var is
+    * an integer type variable.
+    */
+   p = &var;
+
+   printf("Value of variable var is: %d \n", var);
+   printf("Value of derefferancing of p is: %d \n", *p); //*derefferancing of address
+   printf("Address of variable var is: %p \n", &var); //& adresse of
+   printf("Address of of what p is pointing to is: %p \n", p);
+   printf("Address of pointer p is: %p \n", &p);
+}
+
+/*
+Example for bit operations in C.
+*/
+int shift () {
+	int a = 0;
+	printf("Before any shift %d\n", a);
+	a |= (1 << 6); //Set a bit
+	//printf("%u ",num&maxPow ? 1 : 0);
+	printf("After a |= (1 << 6); //Set a bit %d\n", a);
+	a &= ~(1 << 6); //clear a bit
+	printf("After a &= ~(1 << 6); //clear a bit %d\n", a);
+    a ^= (1 << 4); //toggle bit
+	printf("After a ^= (1 << 4); //toggle bit %d\n", a);
+	a <<= 2; //left shift whold byte[]
+	printf("After a <<= 2; //left shift whole byte[] %d\n", a);
+	a >>= 2; //right shift whold byte[]
+	printf("After a >>= 2; //right shift whole byte[] %d\n", a);
+	return a;
+}
+
+int IfTrue (){
+	if (0b10000000){
+		printf("et nul er nok\n");
+	}
+	if(0b11111111){
+		printf("alle 1 er også ok\n");
+	}
+	if(0b00000000){
+		printf("rene 0'er\n");
+	}
 }
 
 /*
@@ -126,12 +177,12 @@ void MenuControl (void) {
 		
 		case 2:
 			printf("Menu Option: %s\n", menuOptions[menuControl]);
-			Char ();
+			IfTrue();
 			break;
 			
 		case 3:
 			printf("Menu Option: %s\n", menuOptions[menuControl]);
-			
+			shift();
 			break;
 			
 		case sizeof(menuOptions) / sizeof(char *) - 1: // "Exit"
