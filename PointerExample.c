@@ -6,19 +6,17 @@
 #include "keypress.h"
 
 /*
-Author: lkri-dev 
-Source: https://github.com/lkri-dev/Memory-PointerExample.git
+ * Author: lkri-dev 
+ * Source: https://github.com/lkri-dev/Memory-PointerExample.git
 
-Compiler notes
-gcc -o a PointerExample.c -lncurses -lm
-./a
+ * Compiler notes
+ * gcc -o a PointerExample.c -lncurses -lm
+ * ./a
 
-Helpfull links:
-	curses.h:
-	https://courses.cs.washington.edu/courses/cse451/99wi/Section/gccintro.html
-
-	https://matt.sh/howto-c
-*/
+ * Helpfull links:
+ *	curses.h:			https://courses.cs.washington.edu/courses/cse451/99wi/Section/gccintro.html
+ *	How to C in 2016:	https://matt.sh/howto-c
+ */
 
 //Defines
 #define NAMEOF(name) #name
@@ -26,14 +24,15 @@ Helpfull links:
 //Global varialbles
 int menuControl = 0; //controls highlight in menu
 bool loopControl = true; //Controls while loop of program
-int hit = 0;
+int keyHit = 0;
 
 int color = 34; //sets color of highlighted text. 31 = red ; 32 = green ; 33 = yellow ; 34 = blue ; 35 = Magenta ; 36 = cyan.
 
 char *menuOptions[] = { //contains the menu options
-	"Pointer Example 1",
-	"Pointer Example 2",
-	"Pointer Example 3",
+	"Datatype Describtion",
+	"Array Describtion",
+	"Pointer Example",
+	"binary",
 	"Bit shitft eksempel",
 	"Exit",
 };
@@ -49,47 +48,22 @@ void PrintMemoryDiagram (short size) {
 		printf("+--------------------+\n");
 	}
 }
-
 /*
- * PointerExample1 
- * The first pointer example
+ * DatatypeDescribtion 
+ * The first example
+ * Variables have addresses in memory and different sizes
+ * Prints variable name, size, number of possible values, and a diagram with a box for each byte including the start and end addresses. 
 */
-void ArrayExample () {
-	short arraySize = 10;
-	char CharArray[arraySize];
-	const int var2Address = &CharArray;
-	const short var2Size = sizeof(CharArray);
-	
-	printf("Variable %s of type char[%d])\n\n", NAMEOF(CharArray), arraySize);
-	
-	printf("Size of of %s variable: %d bytes\n", NAMEOF(CharArray), var2Size );
-	
-	printf("Address of %s: \n0x%X\n", NAMEOF(CharArray), (int)&CharArray );
-	
-	for (int i = 0; i >= arraySize; i++) {
-		printf("0x%X\n", (int)&CharArray[i]);
-	
-	}
-	PrintMemoryDiagram(var2Size);
-	printf("0x%X\n", var2Address + var2Size);
-	printf("\n");
-}
-
-/*
- * PointerExample1 
- * The first pointer example
- * Variables have adresses in memory and different sizes
-*/
-void PointerExample1 () {
-	long var1;
+void DatatypeDescribtion () {
+	short var1;
 	const int var1Address = (int)&var1;
 	const short var1Size = sizeof(var1);
 	const int numberOfBits = (var1Size * 8); //8 is the number of bits in a byte
 	const unsigned long long possibleValues = pow(2 ,numberOfBits); //2^n, 2 comes from the posible stage of a bit 1 and 0.
-	
-	
+
+
 	printf("Variables have adresses in memory\n\n");	
-	
+
 	printf("Size of %s variable: %d bytes\n", NAMEOF(var1), var1Size );
 	//printf("Size in bits: %d\n", numberOfBits);
 	printf("Number of possible values of %s is %lld\n", NAMEOF(var1), possibleValues);
@@ -98,38 +72,65 @@ void PointerExample1 () {
 	printf("0x%X\n", var1Address + var1Size);
 	printf("\n");
 	keypress(0);
-	ArrayExample();
+}
+/*
+ * Array datatype describtion 
+ * The seacond example
+ * Does the same as DataTypeDescribtion except for arrays.
+*/
+void ArrayExample () {
+	char arraySize = 6;
+	char CharArray[arraySize];
+	const int var2Address = &CharArray;
+	const short var2Size = sizeof(CharArray);
+
+	printf("Variable %s of type char[%d])\n\n", NAMEOF(CharArray), arraySize);
+
+	printf("Size of of %s variable: %d bytes\n", NAMEOF(CharArray), var2Size );
+
+	printf("Address of %s: \n0x%X\n", NAMEOF(CharArray), (int)&CharArray );
+
+	for (int i = 0; i >= arraySize; i++) {
+		printf("0x%X\n", (int)&CharArray[i]);
+
+	}
+	PrintMemoryDiagram(var2Size);
+	printf("0x%X\n", var2Address + var2Size);
+	printf("\n");
 }
 
 /*
- * PointerExample2 
- * The second pointer example
+ * PointerExample 
+ * The third pointer example
  * What is pointers?
 */
-void PointerExample2 () {
+void PointerExample () {
 	/* Pointer of integer type, this can hold the
     * address of a integer type variable.
     */
-   int *p;
+	int *p;
 
-   int var = 10;
+	int var = 10;
 
-   /* Assigning the address of variable var to the pointer
-    * p. The p can hold the address of var because var is
-    * an integer type variable.
-    */
-   p = &var;
 
-   printf("Value of variable var is: %d \n", var);
-   printf("Value of derefferancing of p is: %d \n", *p); //*derefferancing of address
-   printf("Address of variable var is: %p \n", &var); //& adresse of
-   printf("Address of of what p is pointing to is: %p \n", p);
-   printf("Address of pointer p is: %p \n", &p);
+	/* Assigning the address of variable var to the pointer p.
+	* The p can hold the address of var because var is an 
+	* integer type variable.
+	*/
+	p = &var;
+
+	printf("Here we can see de different addresses of var and p, and that p is pointing to the address of var.\n\n");
+
+	printf("Value of variable var is: %d \n", var);
+	printf("Value of derefferancing of the pointer p (*p) is: %d \n", *p); //*derefferancing of address
+	printf("Address of variable var (&var) is: %p \n", &var); //& adresse of variable
+	printf("Address of of what p is pointing to is: %p \n", p);
+	printf("Address of pointer p (&p) is: %p \n", &p);
 }
 
 /*
-Example for bit operations in C.
-*/
+ * Example for bit operations.
+ */
 int shift () {
 	int a = 0;
 	printf("Before any shift %d\n", a);
@@ -148,39 +149,45 @@ int shift () {
 }
 
 int IfTrue (){
+	printf("Here is an example of binary values used as true and false, as long as a value is above 0 it is true.");
 	if (0b10000000){
-		printf("et nul er nok\n");
+		printf("0b10000000 - Just one 1 is enough to be true\n");
 	}
 	if(0b11111111){
-		printf("alle 1 er også ok\n");
+		printf("0b11111111 - all 1s is also true\n");
 	}
 	if(0b00000000){
-		printf("rene 0'er\n");
+		printf("0b00000000 - all 0s is false\n");
 	}
 }
 
 /*
  * MenuControl 
  * Calls PrintMenu and then controls the program flow based on menuControl.
-*/
+ */
 void MenuControl (void) {
 	switch (menuControl) {
 		case 0:
 			printf("Menu Option: %s\n", menuOptions[menuControl]);
-			PointerExample1 ();
+			DatatypeDescribtion ();
 			break;
 		
 		case 1:
 			printf("Menu Option: %s\n", menuOptions[menuControl]);
-			PointerExample2 ();
+			ArrayExample ();
 			break;
-		
+			
 		case 2:
+			printf("Menu Option: %s\n", menuOptions[menuControl]);
+			PointerExample();
+			break;
+			
+		case 3:
 			printf("Menu Option: %s\n", menuOptions[menuControl]);
 			IfTrue();
 			break;
 			
-		case 3:
+		case 4:
 			printf("Menu Option: %s\n", menuOptions[menuControl]);
 			shift();
 			break;
@@ -195,7 +202,7 @@ void MenuControl (void) {
 /*
  * PrintMenu 
  * Prints out menuOptions and hightlights based on menuControl.
-*/
+ */
 void PrintMenu (void) {
 	system("clear");
 	
@@ -216,19 +223,15 @@ void PrintMenu (void) {
 			printf("%s\n", menuOptions[i]);
 		}
 	}
+	printf("_________________________________");
+	printf("\n");
 }
 
 /*
  * Main
  * Contain a switch case that controls menu based on keypress input.
-*/
+ */
 int main(void) {
-	
-	//while (!kbhit()){
-	//	printf("You haven't pressed a key.\n");
-	//}
-      
-	
 	printf("Press 'w' and 's' or arrow up and down to navigate the menu.\n");
 	printf("Press 'e' to exit.\n");
 	printf("Press enter to select the red option.\n\n");
@@ -240,28 +243,28 @@ int main(void) {
 	while (loopControl) {
 		printf("\033[0m");
 		
-		hit = keypress(0);
+		keyHit = keypress(0);
  
-		if (hit != 0)
+		if (keyHit != 0)
 		{
-			switch(hit){
+			switch(keyHit){
 				case 65:
-				case 119: //w or 65(arrow key up)
+				case 119: //119(w) or 65(arrow key up)
 					--menuControl;
 					PrintMenu();
 					break;
 				
 				case 66:
-				case 115: //s or 66(arrow key down)
+				case 115: //115(s) or 66(arrow key down)
 					++menuControl;
 					PrintMenu();
 					break;
 				
-				case 10:
+				case 10: //10(enter)
 					MenuControl();
 					break;
 					
-				case 101: //e
+				case 101: //101(e)
 					printf("exit\n");
 					loopControl = false;
 					break;
